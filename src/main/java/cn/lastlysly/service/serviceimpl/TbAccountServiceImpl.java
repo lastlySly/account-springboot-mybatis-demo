@@ -6,6 +6,7 @@ import cn.lastlysly.pojo.TbAccount;
 import cn.lastlysly.service.TbAccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
@@ -27,12 +28,14 @@ public class TbAccountServiceImpl implements TbAccountService {
     public TbAccountMapper tbAccountMapper;
 
     @Override
+    @Transactional(propagation = Propagation.SUPPORTS)
     public List<TbAccount> selectAccountInfo() {
         List<TbAccount> list = tbAccountMapper.selectByExample(null);
         return list;
     }
 
-    @Transactional
+    @Transactional(propagation = Propagation.REQUIRED)
+//    @Transactional
     @Override
     public boolean transferAccount(double money, int fromId, int toId) {
 
@@ -43,7 +46,7 @@ public class TbAccountServiceImpl implements TbAccountService {
         int inRow = customTbAccountMapper.inAccount(map);
 
         //测试事务回滚
-//        int a = 1/0;
+        int a = 1/0;
 
         int outRow = customTbAccountMapper.outAccount(map);
 
